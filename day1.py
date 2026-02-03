@@ -1,13 +1,13 @@
 #A simple chatbot code!!
 
 
-# libraries
+# libraries (pip install requests)
 from datetime import datetime
 import webbrowser
 import requests
 
 # Corpus
-greet_messages = ["hi", "hello", "hey", "hi there", "hey there"]
+greet_messages = ["hi", "hello", "hey", "hi there", "hey there",]
 date_msgs = ["what's the date","date","tell me date","today's date"]
 time_msgs = ["what's the time","time","tell me time","current time"]
 
@@ -16,7 +16,6 @@ def get_weather(city):
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={WEATHER_API_KEY}&units=metric"
     response = requests.get(url)
     data = response.json()
-    #print(data)
 
     if data["cod"] != 200:
         return "Sorry, I couldn't find that location."
@@ -32,7 +31,7 @@ def get_latest_news():
 
     url = f"https://newsapi.org/v2/top-headlines?country=us&apiKey={NEWS_API_KEY}"
     data = requests.get(url).json()
-    #print(data)
+    
     if data["status"] != "ok":
         return "Error fetching news."
 
@@ -46,16 +45,17 @@ def get_latest_news():
 def get_location():
     response = requests.get("http://ip-api.com/json/")
     data = response.json()
-    #print(data);
+
     city = data.get("city", "Unknown location")
     country = data.get("country", "Unknown country")
     return country,city
-
-#news url="https://newsapi.org/v2/everything?q=tesla&from=2026-01-01&sortBy=publishedAt&apiKey=8fed92d6de2447caba785aef3e9f2dcd"
+    
+#main
 
 chat = True
 
 while chat:
+    #input a uset message
     msg = input("Enter your message: ").lower()
 
     if msg in greet_messages:
@@ -71,8 +71,8 @@ while chat:
     elif "open" in msg:
         site = msg.split("open ")[-1]
         url = f"https://www.{site}.com"
-        webbrowser.open(url)
         print(f"Opening {site}...\n")
+        webbrowser.open(url)
 
     elif "location" in msg:
         country, city = get_location()
@@ -91,4 +91,4 @@ while chat:
         chat = False
 
     else:
-        print("I can't understand\n")
+        print("I can't understand.Please try again \n")
