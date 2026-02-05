@@ -1,64 +1,63 @@
-#libraries
+# Libraries
 import pandas as pd
 
-#UCI Heart disease dataset url
-url="https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/processed.cleveland.data"
+# UCI Heart disease dataset URL
+url = "https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/processed.cleveland.data"
 
-#defining column header
-columns=[
-    'id','sepallength','sepalwidth',
-    'petalength','petalwidth','species'
+# Correct column names for the heart dataset
+columns = [
+    'age','sex','cp','trestbps','chol','fbs','restecg',
+    'thalach','exang','oldpeak','slope','ca','thal','target'
 ]
 
-#load the dataset
-df=pd.read_csv(path,names=columns)
+# Load dataset
+df = pd.read_csv(url, names=columns)
 
+print("Original Dataset:")
 display(df)
 
-#replace the missing values
-df.replace("?",pd.NA, inplace=True)
+# Replace missing values represented by '?'
+df.replace("?", pd.NA, inplace=True)
 
-#print the dataset
+print("\nMissing values replaced:")
 display(df)
 
-#count missing values
-mis_val=df.isna().sum()
-print("Missing values in each column ")
+# Count missing values per column
+mis_val = df.isna().sum()
+print("\nMissing values per column:")
 print(mis_val)
 
-#total missing values
-print("\nTotal missing values  :",mis_val.sum())
+print("\nTotal missing values:", mis_val.sum())
 
-#conversion
-df['ca']=pd.to_numeric(df['ca'])
-df['thal']=pd.to_numeric(df['thal'])
+# Convert numeric columns to proper numeric types
+df['ca'] = pd.to_numeric(df['ca'], errors='coerce')
+df['thal'] = pd.to_numeric(df['thal'], errors='coerce')
 
-#mean
-mean_ca=df['ca'].mean()
-mean_thal=df['thal'].mean()
-print("Mean ca: ",mean_ca)
-print("Mean thal : ", mean_thal)
+# Calculate means
+mean_ca = df['ca'].mean()
+mean_thal = df['thal'].mean()
 
-#replace na
-df['ca'].fillna(mean_ca,inplace=True)
-df['thal'].fillna(mean_thal,inplace=True)
+print("\nMean of 'ca':", mean_ca)
+print("Mean of 'thal':", mean_thal)
 
-#display
+# Fill missing numeric values
+df['ca'].fillna(mean_ca, inplace=True)
+df['thal'].fillna(mean_thal, inplace=True)
+
+print("\nAfter filling missing values:")
 display(df)
 
-#duplicate rows
-dup_count=df.duplicated().sum()
-print("Duplicate Rows ",dup_count)
+# Count duplicate rows
+dup_count = df.duplicated().sum()
+print("\nDuplicate Rows:", dup_count)
 
-#delete duplicate rows
-if(dup_count>0):
-  print("Duplicated rows :")
-  display(df[df.duplicated()])
-  df_clean=df.drop_duplicates()
-  print("After deleting duplicate rows")
-  display(df)
+# Remove duplicates
+if dup_count > 0:
+    print("\nDuplicated rows:")
+    display(df[df.duplicated()])
+    
+    df_clean = df.drop_duplicates()
+    print("\nAfter removing duplicates:")
+    display(df_clean)
 else:
-  print("No duplicate rows")
-
-
-
+    print("No duplicate rows found.")
